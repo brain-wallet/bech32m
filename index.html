@@ -113,23 +113,61 @@
       }
 
       function EncodeBech32() {
-        // Similar structure for encoding
         const [input, setInput] = useState('')
+        const [prefix, setPrefix] = useState('npub')
         const [result, setResult] = useState('')
+        const [isHex, setIsHex] = useState(false)
+
         const encode = () => {
-          const words = bech32.toWords(Buffer.from(input, 'utf8'))
-          setResult(bech32.encode('npub', words))
+          try {
+            const buffer = isHex
+              ? Buffer.from(input, 'hex')
+              : Buffer.from(input, 'utf8')
+            const words = bech32.toWords(buffer)
+            setResult(bech32.encode(prefix, words))
+          } catch (err) {
+            console.error(err)
+            setResult('Error encoding data')
+          }
         }
+
         return html`
           <section>
             <h2>Encode Bech32</h2>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Enter text to encode"
-              value=${input}
-              onInput=${e => setInput(e.target.value)}
-            />
+            <div class="form-group">
+              <label for="prefixInput">Prefix:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="prefixInput"
+                placeholder="Enter prefix"
+                value=${prefix}
+                onInput=${e => setPrefix(e.target.value)}
+              />
+            </div>
+            <div class="form-group">
+              <label for="encodeInput">Data to Encode:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="encodeInput"
+                placeholder="Enter text to encode"
+                value=${input}
+                onInput=${e => setInput(e.target.value)}
+              />
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="hexCheck"
+                checked=${isHex}
+                onChange=${() => setIsHex(!isHex)}
+              />
+              <label class="form-check-label" for="hexCheck">
+                Input is Hexadecimal
+              </label>
+            </div>
             <button class="btn btn-success mt-2" onClick=${encode}>
               Encode to Bech32
             </button>
@@ -139,23 +177,61 @@
       }
 
       function EncodeBech32m() {
-        // Same as above, but using bech32m
         const [input, setInput] = useState('')
+        const [prefix, setPrefix] = useState('npub')
         const [result, setResult] = useState('')
+        const [isHex, setIsHex] = useState(false)
+
         const encode = () => {
-          const words = bech32.toWords(Buffer.from(input, 'utf8'))
-          setResult(bech32m.encode('npub', words))
+          try {
+            const buffer = isHex
+              ? Buffer.from(input, 'hex')
+              : Buffer.from(input, 'utf8')
+            const words = bech32m.toWords(buffer)
+            setResult(bech32m.encode(prefix, words))
+          } catch (err) {
+            console.error(err)
+            setResult('Error encoding data')
+          }
         }
+
         return html`
           <section>
             <h2>Encode Bech32m</h2>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Enter text to encode"
-              value=${input}
-              onInput=${e => setInput(e.target.value)}
-            />
+            <div class="form-group">
+              <label for="prefixInput">Prefix:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="prefixInput"
+                placeholder="Enter prefix"
+                value=${prefix}
+                onInput=${e => setPrefix(e.target.value)}
+              />
+            </div>
+            <div class="form-group">
+              <label for="encodeInput">Data to Encode:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="encodeInput"
+                placeholder="Enter text to encode"
+                value=${input}
+                onInput=${e => setInput(e.target.value)}
+              />
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="hexCheck"
+                checked=${isHex}
+                onChange=${() => setIsHex(!isHex)}
+              />
+              <label class="form-check-label" for="hexCheck">
+                Input is Hexadecimal
+              </label>
+            </div>
             <button class="btn btn-success mt-2" onClick=${encode}>
               Encode to Bech32m
             </button>
