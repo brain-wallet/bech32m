@@ -52,7 +52,7 @@
 
         return html`
           <section>
-            <h2>Decode Bech32</h2>
+            <h2>Decode Bech32!</h2>
             <input
               type="text"
               class="form-control"
@@ -112,6 +112,21 @@
         `
       }
 
+      function hexToUint8Array(hexString) {
+        // Ensure that the hex string has 2 characters per byte
+        if (hexString.length % 2 !== 0) {
+          throw new Error('Invalid hex string')
+        }
+
+        const bytes = new Uint8Array(hexString.length / 2)
+
+        for (let i = 0; i < bytes.length; i++) {
+          bytes[i] = parseInt(hexString.substr(i * 2, 2), 16)
+        }
+
+        return bytes
+      }
+
       function EncodeBech32() {
         const [input, setInput] = useState('')
         const [prefix, setPrefix] = useState('npub')
@@ -120,11 +135,17 @@
 
         const encode = () => {
           try {
+            console.log(`Input: ${input}, isHex: ${isHex}`)
             const buffer = isHex
-              ? Buffer.from(input, 'hex')
+              ? hexToUint8Array(input, 'hex')
               : Buffer.from(input, 'utf8')
-            const words = bech32.toWords(buffer)
-            setResult(bech32.encode(prefix, words))
+            console.log(`Buffer: ${buffer.toString('hex')}`)
+            if (isHex) {
+              var words = buffer
+            } else {
+              var words = bech32.toWords(buffer)
+            }
+            setResult(bech32.encode(prefix, words, 1024))
           } catch (err) {
             console.error(err)
             setResult('Error encoding data')
@@ -184,11 +205,17 @@
 
         const encode = () => {
           try {
+            console.log(`Input: ${input}, isHex: ${isHex}`)
             const buffer = isHex
-              ? Buffer.from(input, 'hex')
+              ? hexToUint8Array(input, 'hex')
               : Buffer.from(input, 'utf8')
-            const words = bech32m.toWords(buffer)
-            setResult(bech32m.encode(prefix, words))
+            console.log(`Buffer: ${buffer.toString('hex')}`)
+            if (isHex) {
+              var words = buffer
+            } else {
+              var words = bech32.toWords(buffer)
+            }
+            setResult(bech32m.encode(prefix, words, 1024))
           } catch (err) {
             console.error(err)
             setResult('Error encoding data')
