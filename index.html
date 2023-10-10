@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bech32 & Bech32m Encoding and Decoding</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <script type="module">
+      import { bech32, bech32m } from 'https://esm.sh/bech32'
+      import { Buffer } from 'https://esm.sh/buffer'
+
+      window.decodeBech32 = function () {
+        const inputValue = document.getElementById('decodeInput').value
+        document.getElementById('decodeResult').textContent = JSON.stringify(
+          bech32.decode(inputValue),
+          null,
+          2
+        )
+      }
+
+      window.decodeBech32m = function () {
+        const inputValue = document.getElementById('decodeInputM').value
+        document.getElementById('decodeResultM').textContent = JSON.stringify(
+          bech32m.decode(inputValue),
+          null,
+          2
+        )
+      }
+
+      window.encodeBech32 = function () {
+        const inputValue = document.getElementById('encodeInput').value
+        const words = bech32.toWords(Buffer.from(inputValue, 'utf8'))
+        document.getElementById('encodeResult').textContent = bech32.encode(
+          'npub',
+          words
+        )
+      }
+
+      window.encodeBech32m = function () {
+        const inputValue = document.getElementById('encodeInputM').value
+        const words = bech32.toWords(Buffer.from(inputValue, 'utf8'))
+        document.getElementById('encodeResultM').textContent = bech32m.encode(
+          'npub',
+          words
+        )
+      }
+    </script>
+    <style>
+      body {
+        padding: 20px;
+        background-color: #f8f8f8;
+      }
+      .result {
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        overflow-wrap: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Bech32 & Bech32m Encoding and Decoding</h1>
+
+    <section>
+      <h2>Decode Bech32</h2>
+      <input
+        type="text"
+        id="decodeInput"
+        placeholder="Enter Bech32 to decode"
+        class="form-control"
+      />
+      <button onclick="decodeBech32()" class="btn btn-primary mt-2">
+        Decode Bech32
+      </button>
+      <pre id="decodeResult" class="result"></pre>
+    </section>
+
+    <section>
+      <h2>Decode Bech32m</h2>
+      <input
+        type="text"
+        id="decodeInputM"
+        placeholder="Enter Bech32m to decode"
+        class="form-control"
+      />
+      <button onclick="decodeBech32m()" class="btn btn-primary mt-2">
+        Decode Bech32m
+      </button>
+      <pre id="decodeResultM" class="result"></pre>
+    </section>
+
+    <section>
+      <h2>Encode Bech32</h2>
+      <input
+        type="text"
+        id="encodeInput"
+        placeholder="Enter text to encode"
+        class="form-control"
+      />
+      <button onclick="encodeBech32()" class="btn btn-success mt-2">
+        Encode to Bech32
+      </button>
+      <pre id="encodeResult" class="result"></pre>
+    </section>
+
+    <section>
+      <h2>Encode Bech32m</h2>
+      <input
+        type="text"
+        id="encodeInputM"
+        placeholder="Enter text to encode"
+        class="form-control"
+      />
+      <button onclick="encodeBech32m()" class="btn btn-success mt-2">
+        Encode to Bech32m
+      </button>
+      <pre id="encodeResultM" class="result"></pre>
+    </section>
+  </body>
+</html>
