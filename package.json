@@ -1,5 +1,5 @@
 {
-  "name": "bech32m",
+  "name": "bech32m-app",
   "version": "0.0.1",
   "description": "bech32m",
   "main": "index.js",
