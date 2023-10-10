@@ -9,44 +9,171 @@
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     />
     <script type="module">
+      import {
+        html,
+        render,
+        useState,
+        useEffect
+      } from 'https://unpkg.com/htm/preact/standalone.module.js'
       import { bech32, bech32m } from 'https://esm.sh/bech32'
       import { Buffer } from 'https://esm.sh/buffer'
 
-      window.decodeBech32 = function () {
-        const inputValue = document.getElementById('decodeInput').value
-        document.getElementById('decodeResult').textContent = JSON.stringify(
-          bech32.decode(inputValue),
-          null,
-          2
+      function DecodeBech32() {
+        const [input, setInput] = useState(
+          'npub1g6cyuf8jh4nqda4yu2apjjk8fk48fs924jm9swsx50gmys38c8as7etczv'
         )
+        const [result, setResult] = useState(null)
+
+        const decode = inputValue => {
+          try {
+            let result = bech32.decode(inputValue)
+            let words = result.words
+            let prefix = result.prefix
+            let wordsHex = words
+              .map(w => w.toString(16).padStart(2, '0'))
+              .join('')
+            setResult(prefix + ' ' + wordsHex)
+          } catch (err) {
+            console.log(err)
+            setResult('Invalid Bech32 input')
+          }
+        }
+
+        const handleInput = e => {
+          const inputValue = e.target.value
+          setInput(inputValue)
+          decode(inputValue)
+        }
+
+        // Decode the initial value on component mount
+        useEffect(() => {
+          decode(input)
+        }, [])
+
+        return html`
+          <section>
+            <h2>Decode Bech32</h2>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter Bech32 to decode"
+              value=${input}
+              onInput=${handleInput}
+            />
+            <pre class="result">${result}</pre>
+          </section>
+        `
       }
 
-      window.decodeBech32m = function () {
-        const inputValue = document.getElementById('decodeInputM').value
-        document.getElementById('decodeResultM').textContent = JSON.stringify(
-          bech32m.decode(inputValue),
-          null,
-          2
+      function DecodeBech32m() {
+        const [input, setInput] = useState(
+          'abcdef1l7aum6echk45nj3s0wdvt2fg8x9yrzpqzd3ryx'
         )
+        const [result, setResult] = useState(null)
+
+        const decode = inputValue => {
+          try {
+            let result = bech32m.decode(inputValue)
+            let words = result.words
+            let prefix = result.prefix
+            let wordsHex = words
+              .map(w => w.toString(16).padStart(2, '0'))
+              .join('')
+            setResult(prefix + ' ' + wordsHex)
+          } catch (err) {
+            console.log(err)
+            setResult('Invalid Bech32m input')
+          }
+        }
+
+        const handleInput = e => {
+          const inputValue = e.target.value
+          setInput(inputValue)
+          decode(inputValue)
+        }
+
+        // Decode the initial value on component mount
+        useEffect(() => {
+          decode(input)
+        }, [])
+
+        return html`
+          <section>
+            <h2>Decode Bech32m</h2>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter Bech32m to decode"
+              value=${input}
+              onInput=${handleInput}
+            />
+            <pre class="result">${result}</pre>
+          </section>
+        `
       }
 
-      window.encodeBech32 = function () {
-        const inputValue = document.getElementById('encodeInput').value
-        const words = bech32.toWords(Buffer.from(inputValue, 'utf8'))
-        document.getElementById('encodeResult').textContent = bech32.encode(
-          'npub',
-          words
-        )
+      function EncodeBech32() {
+        // Similar structure for encoding
+        const [input, setInput] = useState('')
+        const [result, setResult] = useState('')
+        const encode = () => {
+          const words = bech32.toWords(Buffer.from(input, 'utf8'))
+          setResult(bech32.encode('npub', words))
+        }
+        return html`
+          <section>
+            <h2>Encode Bech32</h2>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter text to encode"
+              value=${input}
+              onInput=${e => setInput(e.target.value)}
+            />
+            <button class="btn btn-success mt-2" onClick=${encode}>
+              Encode to Bech32
+            </button>
+            <pre class="result">${result}</pre>
+          </section>
+        `
       }
 
-      window.encodeBech32m = function () {
-        const inputValue = document.getElementById('encodeInputM').value
-        const words = bech32.toWords(Buffer.from(inputValue, 'utf8'))
-        document.getElementById('encodeResultM').textContent = bech32m.encode(
-          'npub',
-          words
-        )
+      function EncodeBech32m() {
+        // Same as above, but using bech32m
+        const [input, setInput] = useState('')
+        const [result, setResult] = useState('')
+        const encode = () => {
+          const words = bech32.toWords(Buffer.from(input, 'utf8'))
+          setResult(bech32m.encode('npub', words))
+        }
+        return html`
+          <section>
+            <h2>Encode Bech32m</h2>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter text to encode"
+              value=${input}
+              onInput=${e => setInput(e.target.value)}
+            />
+            <button class="btn btn-success mt-2" onClick=${encode}>
+              Encode to Bech32m
+            </button>
+            <pre class="result">${result}</pre>
+          </section>
+        `
       }
+
+      function App() {
+        return html`
+          <${DecodeBech32} />
+          <${DecodeBech32m} />
+          <${EncodeBech32} />
+          <${EncodeBech32m} />
+        `
+      }
+
+      render(html`<${App} />`, document.body)
     </script>
     <style>
       body {
@@ -62,63 +189,5 @@
       }
     </style>
   </head>
-  <body>
-    <h1>Bech32 & Bech32m Encoding and Decoding</h1>
-
-    <section>
-      <h2>Decode Bech32</h2>
-      <input
-        type="text"
-        id="decodeInput"
-        placeholder="Enter Bech32 to decode"
-        class="form-control"
-      />
-      <button onclick="decodeBech32()" class="btn btn-primary mt-2">
-        Decode Bech32
-      </button>
-      <pre id="decodeResult" class="result"></pre>
-    </section>
-
-    <section>
-      <h2>Decode Bech32m</h2>
-      <input
-        type="text"
-        id="decodeInputM"
-        placeholder="Enter Bech32m to decode"
-        class="form-control"
-      />
-      <button onclick="decodeBech32m()" class="btn btn-primary mt-2">
-        Decode Bech32m
-      </button>
-      <pre id="decodeResultM" class="result"></pre>
-    </section>
-
-    <section>
-      <h2>Encode Bech32</h2>
-      <input
-        type="text"
-        id="encodeInput"
-        placeholder="Enter text to encode"
-        class="form-control"
-      />
-      <button onclick="encodeBech32()" class="btn btn-success mt-2">
-        Encode to Bech32
-      </button>
-      <pre id="encodeResult" class="result"></pre>
-    </section>
-
-    <section>
-      <h2>Encode Bech32m</h2>
-      <input
-        type="text"
-        id="encodeInputM"
-        placeholder="Enter text to encode"
-        class="form-control"
-      />
-      <button onclick="encodeBech32m()" class="btn btn-success mt-2">
-        Encode to Bech32m
-      </button>
-      <pre id="encodeResultM" class="result"></pre>
-    </section>
-  </body>
+  <body></body>
 </html>
