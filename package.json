@@ -1,6 +1,6 @@
 {
   "name": "bech32m-app",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "bech32m",
   "main": "index.js",
   "scripts": {
