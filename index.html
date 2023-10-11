@@ -133,6 +133,25 @@
         const [result, setResult] = useState('')
         const [isHex, setIsHex] = useState(false)
 
+        useEffect(() => {
+          try {
+            console.log(`Input: ${input}, isHex: ${isHex}`)
+            const buffer = isHex
+              ? hexToUint8Array(input, 'hex')
+              : Buffer.from(input, 'utf8')
+            console.log(`Buffer: ${buffer.toString('hex')}`)
+            if (isHex) {
+              var words = buffer
+            } else {
+              var words = bech32.toWords(buffer)
+            }
+            setResult(bech32.encode(prefix, words, 1024))
+          } catch (err) {
+            console.error(err)
+            setResult('Error encoding data')
+          }
+        }, [input, prefix, isHex])
+
         const encode = () => {
           try {
             console.log(`Input: ${input}, isHex: ${isHex}`)
@@ -189,9 +208,6 @@
                 Input is Hexadecimal
               </label>
             </div>
-            <button class="btn btn-success mt-2" onClick=${encode}>
-              Encode to Bech32
-            </button>
             <pre class="result">${result}</pre>
           </section>
         `
@@ -202,6 +218,25 @@
         const [prefix, setPrefix] = useState('npub')
         const [result, setResult] = useState('')
         const [isHex, setIsHex] = useState(false)
+
+        useEffect(() => {
+          try {
+            console.log(`Input: ${input}, isHex: ${isHex}`)
+            const buffer = isHex
+              ? hexToUint8Array(input, 'hex')
+              : Buffer.from(input, 'utf8')
+            console.log(`Buffer: ${buffer.toString('hex')}`)
+            if (isHex) {
+              var words = buffer
+            } else {
+              var words = bech32.toWords(buffer)
+            }
+            setResult(bech32m.encode(prefix, words, 1024))
+          } catch (err) {
+            console.error(err)
+            setResult('Error encoding data')
+          }
+        }, [input, prefix, isHex])
 
         const encode = () => {
           try {
@@ -259,9 +294,6 @@
                 Input is Hexadecimal
               </label>
             </div>
-            <button class="btn btn-success mt-2" onClick=${encode}>
-              Encode to Bech32m
-            </button>
             <pre class="result">${result}</pre>
           </section>
         `
