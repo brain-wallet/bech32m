@@ -234,6 +234,7 @@
             } else {
               var words = bech32.toWords(buffer)
             }
+            words = [1, ...words]
             setResult(bech32m.encode(prefix, words, 1024))
           } catch (err) {
             console.error(err)
